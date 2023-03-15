@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.container .mark:after {
+  position: relative;
+  width: 7px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.mark:after {
+  content: '';
+  display: none;
+}
+.container input:checked ~ .mark:after {
+  display: block;
+}
