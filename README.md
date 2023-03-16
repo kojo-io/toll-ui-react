@@ -8,20 +8,27 @@
 
 ```bash
 npm install --save toll-ui-react
+npm install --save primeicons
+npm install --save date-fns
 ```
 
 ## Usage
 
 ```tsx
-import React, { Component } from 'react'
+import React from 'react'
 
-import MyComponent from 'toll-ui-react'
-import 'toll-ui-react/dist/index.css'
+import { PiButton } from 'toll-ui-react'
+import 'toll-ui-react/dist/index.scss'
 
-class Example extends Component {
-  render() {
-    return <MyComponent />
-  }
+function App() {
+  return (
+    <div>
+      <PiButton type="primary">Primary Button</PiButton>
+      <PiButton type="danger" outline>Outline Danger Button</PiButton>
+      <PiButton type="success" size="large" block>Large Block Success Button</PiButton>
+      <PiButton type="warning" rounded="full" disabled>Loading Button</PiButton>
+    </div>
+  );
 }
 ```
 
