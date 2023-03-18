@@ -15,7 +15,7 @@ export const PiCheckbox = (props: Props) => {
     <div>
       <label
         htmlFor={id}
-        className='flex items-center cursor-pointer container'
+        className='flex items-center cursor-pointer container w-full'
       >
         {props.position === 'left' && (
           <label
@@ -34,7 +34,9 @@ export const PiCheckbox = (props: Props) => {
           type='checkbox'
           className='sr-only peer hidden'
         />
-        <div className='mark bg-gray-200 w-6 h-6 rounded hover:bg-gray-300 peer-checked:bg-blue-600 after:top-1 after:left-[8px]' />
+        <div className='peer-checked:bg-blue-600 w-6 h-6 mark bg-gray-200 rounded hover:bg-gray-300 after:-top-5 after:left-[8px]'>
+          <div className='w-6 h-6' />
+        </div>
         {props.position === 'right' && (
           <label
             htmlFor={id}

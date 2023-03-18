@@ -1,7 +1,7 @@
 import React from 'react'
 
 interface Prop {
-  onClick: () => void
+  onClick?: () => void
   size?: 'extra small' | 'small' | 'normal' | 'large' | 'extra large'
   type?: 'primary' | 'success' | 'danger' | 'warning' | 'light' | 'dark'
   outline?: boolean

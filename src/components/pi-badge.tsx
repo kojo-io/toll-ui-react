@@ -17,7 +17,6 @@ export const PiBadge = (props: Prop) => {
     'bg-yellow-100 text-yellow-800 mr-2 dark:bg-yellow-900 dark:text-yellow-300'
   const darkCSS =
     'bg-gray-100 text-gray-800 mr-2 dark:bg-gray-700 dark:text-gray-300'
-
   const defaultOutline =
     'bg-blue-100 text-blue-800 mr-2 dark:bg-gray-700 dark:text-blue-400 border border-blue-400'
   const successOutline =
@@ -28,13 +27,10 @@ export const PiBadge = (props: Prop) => {
     'bg-yellow-100 text-yellow-800 mr-2 dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300'
   const darkOutline =
     'bg-gray-100 text-gray-800 mr-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-500'
-
   const normal = 'text-xs px-2.5 py-0.5 font-medium'
   const large = 'text-sm px-2.5 py-0.5 font-medium'
-
   const roundedFullCSS = 'rounded-full'
   const roundedCSS = 'rounded'
-
   return (
     <span
       className={`leading-none
