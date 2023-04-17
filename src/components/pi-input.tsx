@@ -59,7 +59,9 @@ const PiInput = (props: Props) => {
   useEffect(() => {
     setInputValue(props.value)
     if (inputEvent) {
-      inputEvent.target.setSelectionRange(inputSelection, inputSelection)
+      if (props.type !== 'number') {
+        inputEvent.target.setSelectionRange(inputSelection, inputSelection)
+      }
     }
   }, [props.value])
 

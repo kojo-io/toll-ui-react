@@ -30,6 +30,7 @@ import { PiBadge } from './components/pi-badge'
 import { PiEditor } from './components/pi-editor'
 import { PiCalendar } from './components/pi-calendar'
 import { PiDatepicker } from './components/pi-datepicker'
+import { PiLoader } from './components/pi-loader'
 
 export {
   PiButton,
@@ -51,5 +52,6 @@ export {
   PiBadge,
   PiEditor,
   PiCalendar,
-  PiDatepicker
+  PiDatepicker,
+  PiLoader
 }

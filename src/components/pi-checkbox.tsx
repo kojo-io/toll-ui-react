@@ -2,8 +2,8 @@ import { uuid } from '../base.service'
 import React from 'react'
 
 interface Props {
-  label: string
-  position: 'left' | 'right'
+  label?: string
+  position?: 'left' | 'right'
   value?: boolean
   onChange?: (event?: any) => void
   disabled?: boolean

@@ -1,7 +1,15 @@
 import ReactDOM from 'react-dom'
 import React from 'react'
 import 'primeicons/primeicons.css'
-export const PiDrawer = (props: any) => {
+
+interface Props {
+  width?: any
+  onClose?: (value?: any) => void
+  position?: 'left' | 'right'
+  title?: string
+  children?: any
+}
+export const PiDrawer = (props: Props) => {
   return (
     <div>
       {ReactDOM.createPortal(
@@ -32,7 +40,7 @@ const BackDrop = (props: any) => {
   )
 }
 
-const Drawer = (props: any) => {
+const Drawer = (props: Props) => {
   return (
     <div
       className={`modal fixed top-0 bottom-0 z-999999999999999999999 ${
@@ -62,7 +70,7 @@ const Drawer = (props: any) => {
                 </div>
               </div>
             </div>
-            <div className='p-5 h-full w-full grow overflow-auto'>
+            <div className='h-full w-full grow overflow-auto'>
               {props.children}
             </div>
           </div>
