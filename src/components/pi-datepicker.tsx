@@ -2,7 +2,6 @@ import { uuid } from '../base.service'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { PiCalendar } from './pi-calendar'
 import { format, isValid, parse } from 'date-fns'
-import { formatString, specialChars } from "./format-string";
 
 interface Props {
   name?: string
@@ -19,6 +18,7 @@ interface Props {
 }
 export const PiDatepicker = (props: Props) => {
   const id = uuid()
+  const specialChars = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/g
   const [displayLabel, setDisplayLabel] = useState<string>('')
   const [inputEvent, setInputEvent] = useState<any>()
   const [inputSelection, setInputSelection] = useState<number>(0)
@@ -36,6 +36,40 @@ export const PiDatepicker = (props: Props) => {
   )
   const [getClick, setClick] = useState<any>()
   const [dateValue, setDateValue] = useState<Date>(new Date())
+  const formatString = (maskFormat: string, stringToFormat: string) => {
+    let result = ''
+    let strIndex = 0
+
+    for (let i = 0; i < maskFormat.length; i++) {
+      const maskChar = maskFormat[i]
+      if (maskChar === 'D') {
+        if (
+          stringToFormat[strIndex] &&
+          !isNaN(parseInt(stringToFormat[strIndex]))
+        ) {
+          result += stringToFormat[strIndex]
+          strIndex++
+        } else {
+          result += '_'
+          strIndex++
+        }
+      } else if (maskChar === 'A') {
+        if (
+          stringToFormat[strIndex] &&
+          /^[a-zA-Z]+$/.test(stringToFormat[strIndex])
+        ) {
+          result += stringToFormat[strIndex]
+          strIndex++
+        } else {
+          result += '_'
+          strIndex++
+        }
+      } else {
+        result += maskChar
+      }
+    }
+    return result
+  }
   const selectItem = (item: Date) => {
     setDisplayLabel(format(new Date(item), props.format ?? 'MM/dd/yyyy'))
     props.onValueChange?.(new Date(item))
@@ -53,9 +87,7 @@ export const PiDatepicker = (props: Props) => {
     setInputEvent(event)
     setDisplayLabel(newStr)
     setInputSelection(event.target.selectionStart)
-    if (newStr.length > 0) {
-      setInputTouched(true)
-    }
+    setInputTouched(true)
     if (isValid(new Date(newStr))) {
       setInputIsValid(true)
       setDateValue(parse(newStr, props.format ?? 'MM/dd/yyyy', new Date()))
@@ -79,13 +111,11 @@ export const PiDatepicker = (props: Props) => {
     if (getClick) {
       ;(getClick as HTMLDivElement).addEventListener('mouseenter', mEnter)
       ;(getClick as HTMLDivElement).addEventListener('mouseleave', mLeave)
+    }
 
-      return () => {
-        ;(getClick as HTMLDivElement).removeEventListener('mouseenter', mEnter)
-        ;(getClick as HTMLDivElement).removeEventListener('mouseleave', mLeave)
-      }
-    } else {
-      return () => null
+    return () => {
+      ;(getClick as HTMLDivElement).removeEventListener('mouseenter', mEnter)
+      ;(getClick as HTMLDivElement).removeEventListener('mouseleave', mLeave)
     }
   }, [getClick, mEnter, mLeave])
 
