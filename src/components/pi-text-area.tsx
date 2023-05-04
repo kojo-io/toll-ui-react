@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 interface Props {
   id: string
@@ -24,33 +24,28 @@ const PiTextArea = (props: Props) => {
     'focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 border border-gray-300 dark:border-gray-600'
   const invalidClass =
     'focus:ring-red-500 focus:border-red-500 dark:focus:ring-red-500 dark:focus:border-red-500 border border-red-500 dark:border-red-600'
-  // const [inputClass, setInputClass] = useState(defaultClass)
-  const [inputValue, setInputValue] = useState<string>(props.value)
-  const [inputEvent, setInputEvent] = useState<any>()
-  const [inputSelection, setInputSelection] = useState<number>(0)
+  const [inputValue, setInputValue] = useState<string>(props.value ?? '')
   const [inputIsInValid, setInputIsInValid] = useState<boolean | undefined>(
     false
   )
 
-  const inputChangeHandler = (event: any) => {
-    setInputEvent(event)
-    setInputValue(event.target.value)
-    setInputSelection(event.target.selectionStart)
-    if (event.target.value.length > 0) {
-      setInputTouched(true)
-    }
-    if (event.target.value.length === 0) {
-      setInputIsValid(false)
-    } else {
-      setInputIsValid(true)
-    }
-  }
+  const inputChangeHandler = useCallback(
+    (event: any) => {
+      setInputValue(event.target.value)
+      if (event.target.value.length > 0) {
+        setInputTouched(true)
+      }
+      if (event.target.value.length === 0) {
+        setInputIsValid(false)
+      } else {
+        setInputIsValid(true)
+      }
+    },
+    [inputValue]
+  )
 
   useEffect(() => {
     setInputValue(props.value)
-    if (inputEvent) {
-      inputEvent.target.setSelectionRange(inputSelection, inputSelection)
-    }
   }, [props.value])
 
   useEffect(() => {
@@ -81,7 +76,7 @@ const PiTextArea = (props: Props) => {
         id={props.id}
         name={props.name}
         onChange={inputChangeHandler}
-        value={props.value}
+        value={inputValue}
         disabled={props.disabled}
         readOnly={props.readOnly}
         className={`${defaultClass} ${

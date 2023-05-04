@@ -16,6 +16,7 @@ interface Props {
   mask?: string
   size: 'large' | 'small' | 'normal'
   disabled?: boolean
+  multiline?: boolean
 }
 
 const PiInput = (props: Props) => {
@@ -28,10 +29,7 @@ const PiInput = (props: Props) => {
     'focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 border border-gray-300 dark:border-gray-600'
   const invalidClass =
     'focus:ring-red-500 focus:border-red-500 dark:focus:ring-red-500 dark:focus:border-red-500 border border-red-500 dark:border-red-600'
-  // const [inputClass, setInputClass] = useState(defaultClass)
-  const [inputValue, setInputValue] = useState<string>(props.value)
-  const [inputEvent, setInputEvent] = useState<any>()
-  const [inputSelection, setInputSelection] = useState<number>(0)
+  const [inputValue, setInputValue] = useState<string>(props.value ?? '')
   const [inputIsInValid, setInputIsInValid] = useState<boolean | undefined>(
     false
   )
@@ -43,9 +41,7 @@ const PiInput = (props: Props) => {
       eventString = event.target.value.replace(specialChars, '')
       newStr = formatString(props.mask, eventString)
     }
-    setInputEvent(event)
     setInputValue(newStr)
-    setInputSelection(event.target.selectionStart)
     if (eventString.length > 0) {
       setInputTouched(true)
     }
@@ -58,21 +54,14 @@ const PiInput = (props: Props) => {
 
   useEffect(() => {
     setInputValue(props.value)
-    if (inputEvent) {
-      if (props.type !== 'number') {
-        inputEvent.target.setSelectionRange(inputSelection, inputSelection)
-      }
-    }
   }, [props.value])
 
   useEffect(() => {
-    if (inputEvent) {
-      if (props.type === 'email') {
-        if (!emailRegex.test(inputValue)) {
-          setInputIsValid(false)
-        } else {
-          setInputIsValid(true)
-        }
+    if (props.type === 'email') {
+      if (!emailRegex.test(inputValue)) {
+        setInputIsValid(false)
+      } else {
+        setInputIsValid(true)
       }
     }
     props.onChange(inputValue)
@@ -102,7 +91,7 @@ const PiInput = (props: Props) => {
         id={props.id}
         name={props.name}
         onChange={inputChangeHandler}
-        value={props.value}
+        value={inputValue}
         pattern={`${props.type === 'email' && emailRegex}`}
         readOnly={props.readOnly}
         disabled={props.disabled}
@@ -114,7 +103,9 @@ const PiInput = (props: Props) => {
         ${props.size === 'large' && 'p-4 sm:text-md'}
         ${props.size === 'normal' && 'p-2.5 text-sm'}
         ${props.size === 'small' && 'p-2 sm:text-xs'}
-        ${props.rounded === 'rounded' && 'rounded-lg'}`}
+        ${props.rounded === 'rounded' && 'rounded-lg'}
+        ${props.multiline && 'break-all'}
+        `}
         placeholder={props.placeholder}
         required={props.required}
       />

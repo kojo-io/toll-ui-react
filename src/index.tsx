@@ -31,6 +31,7 @@ import { PiEditor } from './components/pi-editor'
 import { PiCalendar } from './components/pi-calendar'
 import { PiDatepicker } from './components/pi-datepicker'
 import { PiLoader } from './components/pi-loader'
+import { PiMultiSelectList } from './components/pi-multi-select-list'
 
 export {
   PiButton,
@@ -53,5 +54,6 @@ export {
   PiEditor,
   PiCalendar,
   PiDatepicker,
-  PiLoader
+  PiLoader,
+  PiMultiSelectList
 }
