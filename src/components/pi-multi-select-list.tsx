@@ -18,7 +18,7 @@ interface Props {
 export const PiMultiSelectList = (props: Props) => {
   const id = uuid()
   const [displayLabel, setDisplayLabel] = useState<string>('')
-  const [displayValue, setDisplayValue] = useState<any>()
+  const [displayValue, setDisplayValue] = useState<any[]>([])
 
   const ele = document.getElementById(id)
   const inputRef = useRef<HTMLInputElement>(ele as HTMLInputElement)
@@ -39,27 +39,23 @@ export const PiMultiSelectList = (props: Props) => {
     if (find) {
       const selected = selectedItems.find((u) => u === find[props.dataValue])
       if (!selected) {
-        const value = `${
-          displayValue
-            ? `${displayValue},${find[props.dataValue]}`
-            : find[props.dataValue]
-        }`
-        setDisplayValue(value)
+        selectedItems.push(find[props.dataValue])
+        setSelectedItems([...selectedItems])
+
+        setDisplayValue([...selectedItems])
         const labelValue = `${
           displayLabel
             ? `${displayLabel},${find[props.dataLabel]}`
             : find[props.dataLabel]
         }`
         setDisplayLabel(labelValue)
-
-        selectedItems.push(find[props.dataValue])
-        setSelectedItems([...selectedItems])
       } else {
         const index = selectedItems.findIndex(
           (u) => u === find[props.dataValue]
         )
         selectedItems.splice(index, 1)
         setSelectedItems([...selectedItems])
+        setDisplayValue([...selectedItems])
 
         const splitDisplayLabel = displayLabel.split(',')
         const findLabelIndex = splitDisplayLabel.findIndex(
@@ -71,18 +67,6 @@ export const PiMultiSelectList = (props: Props) => {
           newLabel = `${newLabel ? `${newLabel},${u}` : u}`
         })
         setDisplayLabel(newLabel)
-
-        const splitDisplayValue = displayValue.split(',')
-        const findValueIndex = splitDisplayValue.findIndex(
-          (u: any) => u === String(find[props.dataValue])
-        )
-        splitDisplayValue.splice(findValueIndex, 1)
-        let newValue = ''
-        splitDisplayValue.forEach((u: any) => {
-          newValue = `${newValue ? `${newValue},${u}` : u}`
-        })
-        console.log('1', newValue)
-        setDisplayValue(newValue)
       }
     }
   }
@@ -100,9 +84,10 @@ export const PiMultiSelectList = (props: Props) => {
   }
 
   useEffect(() => {
-    setInputIsValid(!displayValue)
-    props.onValueChange(selectedItems)
-  }, [selectedItems, displayValue])
+    setInputIsValid(displayValue.length === 0)
+    console.log(displayValue)
+    props.onValueChange(displayValue)
+  }, [displayValue])
 
   useEffect(() => {
     setInputIsValid(!displayLabel)
@@ -110,17 +95,10 @@ export const PiMultiSelectList = (props: Props) => {
 
   useEffect(() => {
     if (props.value.length > 0) {
-      setSelectedItems([...props.value])
-      let newValue = ''
       let newLabel = ''
       props.value.forEach((m: any) => {
         const search = props.data.find((u: any) => u[props.dataValue] === m)
         if (search) {
-          newValue = `${
-            newValue
-              ? `${newValue},${search[props.dataValue]}`
-              : search[props.dataValue]
-          }`
           newLabel = `${
             newLabel
               ? `${newLabel},${search[props.dataLabel]}`
@@ -128,14 +106,19 @@ export const PiMultiSelectList = (props: Props) => {
           }`
         }
       })
-      setDisplayValue(newValue)
       setDisplayLabel(newLabel)
     }
   }, [props.data, props.value, props.dataValue])
 
   useEffect(() => {
+    setSelectedItems([...props.value])
+  }, [props.value])
+
+  useEffect(() => {
     const event = () => {
-      if (!document.activeElement?.attributes.getNamedItem('select-list')) {
+      if (
+        !document.activeElement?.attributes.getNamedItem('multi-select-list')
+      ) {
         const ele = document.getElementsByClassName(
           'multi-select-list-container'
         )
@@ -196,7 +179,7 @@ export const PiMultiSelectList = (props: Props) => {
       )}
       <div className='relative'>
         <input
-          select-list='pi-multi-select-list'
+          multi-select-list='pi-multi-select-list'
           placeholder={props.placeholder}
           readOnly
           onChange={onDisplayModelChange}
