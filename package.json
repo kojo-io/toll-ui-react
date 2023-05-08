@@ -1,6 +1,6 @@
 {
   "name": "toll-ui-react",
-  "version": "1.5.8-alpha",
+  "version": "1.6.3-alpha",
   "description": "React ui library based on tailwindcss",
   "author": "kojo-io",
   "license": "MIT",

@@ -38,36 +38,30 @@ export const PiMultiSelectList = (props: Props) => {
     const find = props.data.find((u: any) => u === item)
     if (find) {
       const selected = selectedItems.find((u) => u === find[props.dataValue])
+      let newLabel = ''
       if (!selected) {
         selectedItems.push(find[props.dataValue])
-        setSelectedItems([...selectedItems])
 
         setDisplayValue([...selectedItems])
-        const labelValue = `${
-          displayLabel
-            ? `${displayLabel},${find[props.dataLabel]}`
-            : find[props.dataLabel]
-        }`
-        setDisplayLabel(labelValue)
       } else {
         const index = selectedItems.findIndex(
           (u) => u === find[props.dataValue]
         )
         selectedItems.splice(index, 1)
-        setSelectedItems([...selectedItems])
-        setDisplayValue([...selectedItems])
-
-        const splitDisplayLabel = displayLabel.split(',')
-        const findLabelIndex = splitDisplayLabel.findIndex(
-          (u) => u === find[props.dataLabel]
-        )
-        splitDisplayLabel.splice(findLabelIndex, 1)
-        let newLabel = ''
-        splitDisplayLabel.forEach((u) => {
-          newLabel = `${newLabel ? `${newLabel},${u}` : u}`
-        })
-        setDisplayLabel(newLabel)
       }
+      selectedItems.forEach((u: any) => {
+        const findLabel = props.data.find((m) => m[props.dataValue] === u)
+        if (findLabel) {
+          newLabel = `${
+            newLabel
+              ? `${newLabel},${findLabel[props.dataLabel]}`
+              : findLabel[props.dataLabel]
+          }`
+        }
+      })
+      setDisplayLabel(newLabel)
+      setSelectedItems([...selectedItems])
+      setDisplayValue([...selectedItems])
     }
   }
 
@@ -85,7 +79,6 @@ export const PiMultiSelectList = (props: Props) => {
 
   useEffect(() => {
     setInputIsValid(displayValue.length === 0)
-    console.log(displayValue)
     props.onValueChange(displayValue)
   }, [displayValue])
 
@@ -111,8 +104,11 @@ export const PiMultiSelectList = (props: Props) => {
   }, [props.data, props.value, props.dataValue])
 
   useEffect(() => {
-    setSelectedItems([...props.value])
+    if (props.value.length > 0) {
+      setSelectedItems([...props.value])
+    }
   }, [props.value])
+
 
   useEffect(() => {
     const event = () => {
@@ -157,6 +153,12 @@ export const PiMultiSelectList = (props: Props) => {
       return () => null
     }
   })
+
+
+  const checkItem = (item: any): boolean => {
+    const display = selectedItems.find((u: any) => u === item)
+    return !!display
+  }
 
   useEffect(() => {
     setInputIsInValid(!inputIsValid && inputTouched)
@@ -221,8 +223,9 @@ export const PiMultiSelectList = (props: Props) => {
             <div
               onClick={() => selectItem(item)}
               className={`p-2 cursor-pointer dark:hover:bg-gray-600 hover:bg-gray-200 ${
-                String(displayValue).includes(item[props.dataValue]) &&
-                'bg-gray-200 dark:bg-gray-600'
+                checkItem(item[props.dataValue])
+                  ? 'bg-gray-200 dark:bg-gray-600'
+                  : null
               }`}
               key={item[props.dataValue]}
             >
